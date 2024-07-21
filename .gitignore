@@ -1,0 +1,49 @@
+# Arquivos de configuração que podem conter variáveis sensíveis
+appsettings.json
+appsettings.Development.json
+appsettings.Production.json
+# Ou, para ser mais genérico e ignorar todas as variações:
+appsettings*.json
+
+# Arquivos e diretórios gerados pela compilação
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
+
+# Arquivos de pacotes NuGet
+*.nupkg
+# Pasta de pacotes NuGet
+packages/
+
+# Arquivos de projeto VS Code
+.vscode/
+
+# Arquivos de projeto Visual Studio
+.vs/
+*.user
+*.userosscache
+*.suo
+*.userprefs
+
+# Arquivos de cache de compilação temporária
+*.csproj.FileListAbsolute.txt
+*.dll
+*.exe
+*.pdb
+
+# Pasta de saída
+[Oo]ut/
+
+# Arquivos de banco de dados locais
+*.mdf
+*.ldf
+
+# Arquivos de backup
+*.bak
+*.tmp
+*.temp
+
+# Outros arquivos e diretórios a serem ignorados
+.DS_Store
+Thumbs.db
