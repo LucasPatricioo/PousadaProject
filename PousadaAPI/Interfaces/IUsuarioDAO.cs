@@ -1,7 +1,9 @@
-﻿namespace PousadaAPI.Interfaces;
+﻿using PousadaAPI.Data.DTO;
+
+namespace PousadaAPI.Interfaces;
 
 public interface IUsuarioDAO
 {
-    public void InserirUsuario(Models.Usuario usuario);
+    public void InserirUsuario(CreateUsuarioDTO usuario);
 }
 

@@ -1,5 +1,6 @@
 using Dapper;
 using MySql.Data.MySqlClient;
+using PousadaAPI.Data.DTO;
 using PousadaAPI.Interfaces;
 
 namespace Data.DAO;
@@ -13,12 +14,13 @@ public class UsuarioDAO : IUsuarioDAO
         _connectionString = connectionString;
     }
 
-    public void InserirUsuario(Models.Usuario usuario)
+    public void InserirUsuario(CreateUsuarioDTO usuario)
     {
         using (var connection = new MySqlConnection(_connectionString))
         {
             connection.Execute(
-                "INSERT INTO Usuario (Id, Nome, Email, Senha, DataNascimento, DataCadastro, Ativo) VALUES (@Id, @Nome, @Email, @Senha, @DataNascimento, @DataCadastro, @Ativo)",
+                @"INSERT INTO Usuario (Nome, Email, Senha, DataNascimento) 
+                  VALUES (@Nome, @Email, @Senha, @DataNascimento)",
                 usuario
             );
         }
