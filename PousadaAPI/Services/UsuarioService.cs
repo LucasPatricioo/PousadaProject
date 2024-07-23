@@ -1,5 +1,5 @@
 ﻿using Models;
-using PousadaAPI.Data.DTO;
+using PousadaAPI.Data.DTO.Usuario;
 using PousadaAPI.Data.Enums;
 using PousadaAPI.Exceptions;
 using PousadaAPI.Interfaces;
@@ -16,7 +16,7 @@ public class UsuarioService : IUsuarioService
         _usuarioContext = usuarioDAO;
     }
 
-    public void NovoUsuario(CreateUsuarioDTO usuario)
+    public void InserirUsuario(CreateUsuarioDTO usuario)
     {
         try
         {
@@ -25,7 +25,7 @@ public class UsuarioService : IUsuarioService
                 _usuarioContext.InserirUsuario(usuario);
             }
         }
-        catch(UsuarioException uex)
+        catch (UsuarioException uex)
         {
             throw new UsuarioException(uex.Message);
         }
@@ -35,15 +35,69 @@ public class UsuarioService : IUsuarioService
         }
     }
 
-    public Usuario BuscarUsuarioPorEmail(string email)
+    public void AtualizarUsuario(UpdateUsuarioDTO usuario)
+    {
+        try
+        {
+            ReadUsuarioDTO usuarioExistente = BuscarUsuarioPorId(usuario.Id);
+
+            usuario = ValidarCamposUsuarioAtualizacao(usuario, usuarioExistente);
+
+            _usuarioContext.AtualizarUsuario(usuario);
+        }
+        catch (UsuarioException uex)
+        {
+            throw new UsuarioException(uex.Message);
+        }
+        catch (Exception)
+        {
+            throw new Exception("Erro não mapeado ao atualizar usuário");
+        }
+    }
+
+    public IEnumerable<ReadUsuarioDTO> BuscarUsuarios()
+    {
+        var usuarios = _usuarioContext.BuscarUsuarios();
+        if (usuarios is null || usuarios.Count() == 0)
+        {
+            throw new UsuarioNaoEncontradoException();
+        }
+        return usuarios;
+    }
+
+    public ReadUsuarioDTO BuscarUsuarioPorId(int id)
+    {
+        ReadUsuarioDTO usuarioRecebido = _usuarioContext.BuscarUsuarioPorId(id);
+
+        if (usuarioRecebido is null)
+        {
+            throw new UsuarioNaoEncontradoException();
+        }
+
+        return usuarioRecebido;
+    }
+
+    public ReadUsuarioDTO BuscarUsuarioPorEmail(string email)
     {
         throw new NotImplementedException();
     }
 
-    public Usuario BuscarUsuarioPorId(int id)
+    public void DeletarUsuario(int id)
     {
-        throw new NotImplementedException();
+        try
+        {
+            _usuarioContext.DeletarUsuario(id);
+        }
+        catch (Exception)
+        {
+            throw new Exception("Erro não mapeado ao deletar usuário");
+        }
+
     }
+
+
+
+    #region Validações
 
     private bool ValidarUsuario(CreateUsuarioDTO usuario)
     {
@@ -62,7 +116,7 @@ public class UsuarioService : IUsuarioService
             throw new UsuarioSenhaInvalidaException();
         }
 
-        if(GetForcaDaSenha(usuario.Senha) < ForcaDaSenha.Aceitavel)
+        if (GetForcaDaSenha(usuario.Senha) < ForcaDaSenha.Aceitavel)
         {
             throw new UsuarioSenhaInseguraException();
         }
@@ -75,6 +129,32 @@ public class UsuarioService : IUsuarioService
         return true;
     }
 
+    public UpdateUsuarioDTO ValidarCamposUsuarioAtualizacao(UpdateUsuarioDTO usuarioAtualizado, ReadUsuarioDTO usuarioRecuperado)
+    {
+        if (usuarioAtualizado.Nome == null)
+        {
+            usuarioAtualizado.Nome = usuarioRecuperado.Nome;
+        }
+
+        if (usuarioAtualizado.Email == null)
+        {
+            usuarioAtualizado.Email = usuarioRecuperado.Email;
+        }
+
+        if (usuarioAtualizado.Senha == null)
+        {
+            usuarioAtualizado.Senha = usuarioRecuperado.Senha;
+        }
+
+        if (usuarioAtualizado.Ativo == null)
+        {
+            usuarioAtualizado.Ativo = usuarioRecuperado.Ativo;
+        }
+
+        return usuarioAtualizado;
+    }
+
+    #endregion
 
     #region Checa força da senha
 
