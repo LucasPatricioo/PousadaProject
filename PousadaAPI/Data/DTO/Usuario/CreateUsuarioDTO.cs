@@ -1,4 +1,4 @@
-﻿namespace PousadaAPI.Data.DTO;
+﻿namespace PousadaAPI.Data.DTO.Usuario;
 
 public class CreateUsuarioDTO
 {
