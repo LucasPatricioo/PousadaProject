@@ -55,6 +55,16 @@ public class UsuarioService : IUsuarioService
         }
     }
 
+    public IEnumerable<ReadUsuarioDTO> BuscarUsuarios()
+    {
+        var usuarios = _usuarioContext.BuscarUsuarios();
+        if (usuarios is null || usuarios.Count() == 0)
+        {
+            throw new UsuarioNaoEncontradoException();
+        }
+        return usuarios;
+    }
+
     public ReadUsuarioDTO BuscarUsuarioPorId(int id)
     {
         ReadUsuarioDTO usuarioRecebido = _usuarioContext.BuscarUsuarioPorId(id);
@@ -74,7 +84,15 @@ public class UsuarioService : IUsuarioService
 
     public void DeletarUsuario(int id)
     {
-        throw new NotImplementedException();
+        try
+        {
+            _usuarioContext.DeletarUsuario(id);
+        }
+        catch (Exception)
+        {
+            throw new Exception("Erro não mapeado ao deletar usuário");
+        }
+
     }
 
 

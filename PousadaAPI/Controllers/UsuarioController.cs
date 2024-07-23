@@ -53,12 +53,47 @@ public class UsuarioController : ControllerBase
         }
     }
 
+    [HttpGet("BuscarUsuarios")]
+    public IActionResult BuscarUsuarios()
+    {
+        try
+        {
+            return Ok(_usuarioService.BuscarUsuarios());
+        }
+        catch(UsuarioNaoEncontradoException uex)
+        {
+            return NotFound(uex.Message);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ex.Message);
+        }
+    }
+
     [HttpGet("BuscarUsuarioPorId/{id}")]
     public IActionResult BuscarUsuarioPorId(int id)
     {
         try
         {
             return Ok(_usuarioService.BuscarUsuarioPorId(id));
+        }
+        catch (UsuarioNaoEncontradoException uex)
+        {
+            return NotFound(uex.Message);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ex.Message);
+        }
+    }
+
+    [HttpDelete("DeletarUsuario/{id}")]
+    public IActionResult DeletarUsuario(int id)
+    {
+        try
+        {
+            _usuarioService.DeletarUsuario(id);
+            return Ok("Usuário deletado com sucesso!");
         }
         catch (UsuarioNaoEncontradoException uex)
         {

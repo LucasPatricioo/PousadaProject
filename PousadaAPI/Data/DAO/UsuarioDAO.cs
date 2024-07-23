@@ -39,6 +39,17 @@ public class UsuarioDAO : IUsuarioDAO
         }
     }
 
+    public IEnumerable<ReadUsuarioDTO> BuscarUsuarios()
+    {
+        using (var connection = new MySqlConnection(_connectionString))
+        {
+            return connection.Query<ReadUsuarioDTO>(
+                @"SELECT Id, Nome, Email, Senha, DataNascimento, DataCadastro, Ativo
+                  FROM Usuario"
+            );
+        }
+    }
+
     public ReadUsuarioDTO BuscarUsuarioPorId(int id)
     {
         using (var connection = new MySqlConnection(_connectionString))
@@ -59,7 +70,14 @@ public class UsuarioDAO : IUsuarioDAO
 
     public void DeletarUsuario(int id)
     {
-        throw new NotImplementedException();
+        using (var connection = new MySqlConnection(_connectionString))
+        {
+            connection.Execute(
+                @"DELETE FROM Usuario
+                  WHERE Id = @Id",
+                new { Id = id }
+            );
+        }
     }
 
 }
