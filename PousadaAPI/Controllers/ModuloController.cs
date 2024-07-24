@@ -15,11 +15,18 @@ public class ModuloController : ControllerBase
         _moduloService = moduloService;
     }
 
-    [HttpPost]
+    [HttpPost("NovoModulo")]
     public IActionResult InserirModulo([FromBody] CreateModuloDTO modulo)
     {
-        _moduloService.InserirModulo(modulo);
-        return Ok();
+        try
+        {
+            _moduloService.InserirModulo(modulo);
+            return Ok("Novo módulo criado com sucesso!");
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ex.Message);
+        }
     }
 
     [HttpPut]

@@ -5,9 +5,26 @@ namespace PousadaAPI.Services
 {
     public class ModuloService : IModuloService
     {
+        private readonly IModuloDAO _moduloContext;
+
+        public ModuloService(IModuloDAO moduloDAO)
+        {
+            _moduloContext = moduloDAO;
+        }
+
         public void InserirModulo(CreateModuloDTO modulo)
         {
-            throw new System.NotImplementedException();
+            try
+            {
+                if (ValidarModulo(modulo))
+                {
+                    _moduloContext.InserirModulo(modulo);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
         }
 
         public void AtualizarModulo(UpdateModuloDTO modulo)
@@ -29,5 +46,24 @@ namespace PousadaAPI.Services
         {
             throw new System.NotImplementedException();
         }
+
+        #region Validações
+
+        private bool ValidarModulo(CreateModuloDTO modulo)
+        {
+            if (string.IsNullOrWhiteSpace(modulo.Nome))
+            {
+                throw new Exception("Nome do módulo não pode ser vazio");
+            }
+
+            if (string.IsNullOrWhiteSpace(modulo.Descricao))
+            {
+                throw new Exception("Descrição do módulo não pode ser vazia");
+            }
+
+            return true;
+        }
+
+        #endregion
     }
 }

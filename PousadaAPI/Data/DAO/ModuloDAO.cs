@@ -1,4 +1,6 @@
-﻿using PousadaAPI.Data.DTO.Modulo;
+﻿using Dapper;
+using MySql.Data.MySqlClient;
+using PousadaAPI.Data.DTO.Modulo;
 using PousadaAPI.Interfaces;
 
 namespace PousadaAPI.Data.DAO;
@@ -14,7 +16,14 @@ public class ModuloDAO : IModuloDAO
 
     public void InserirModulo(CreateModuloDTO modulo)
     {
-        throw new System.NotImplementedException();
+        using (var connection = new MySqlConnection(_connectionString))
+        {
+            connection.Execute(
+                @"INSERT INTO Modulo (Nome, Descricao) 
+                  VALUES (@Nome, @Descricao)",
+                modulo
+            );
+        }
     }
 
     public void AtualizarModulo(UpdateModuloDTO modulo)
