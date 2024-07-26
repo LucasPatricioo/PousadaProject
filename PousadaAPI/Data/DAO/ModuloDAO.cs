@@ -68,7 +68,7 @@ public class ModuloDAO : IModuloDAO
         using (var connection = new MySqlConnection(_connectionString))
         {
             return connection.QueryFirstOrDefault<ReadModuloDTO>(
-                @"SELECT Id, Nome, Descricao
+                @"SELECT Id, Nome, Descricao, DataCriacao, Ativo 
                   FROM Modulo
                   WHERE Nome = @Nome",
                 new { Nome = nome }
