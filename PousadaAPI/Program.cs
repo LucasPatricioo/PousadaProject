@@ -1,4 +1,5 @@
 using Data.DAO;
+using PousadaAPI.Data.DAO;
 using PousadaAPI.Interfaces;
 using PousadaAPI.Services;
 
@@ -13,8 +14,10 @@ builder.Services.AddSwaggerGen();
 string connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
 builder.Services.AddScoped<IUsuarioDAO, UsuarioDAO>(provider => new UsuarioDAO(connectionString));
+builder.Services.AddScoped<IModuloDAO, ModuloDAO>(provider => new ModuloDAO(connectionString));
 
 builder.Services.AddScoped<IUsuarioService, UsuarioService>();
+builder.Services.AddScoped<IModuloService, ModuloService>();
 
 var app = builder.Build();
 

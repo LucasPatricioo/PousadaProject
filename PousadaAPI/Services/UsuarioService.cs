@@ -57,36 +57,67 @@ public class UsuarioService : IUsuarioService
 
     public IEnumerable<ReadUsuarioDTO> BuscarUsuarios()
     {
-        var usuarios = _usuarioContext.BuscarUsuarios();
-        if (usuarios is null || usuarios.Count() == 0)
+        try
+        {
+            var usuarios = _usuarioContext.BuscarUsuarios();
+            if (usuarios is null || usuarios.Count() == 0)
+            {
+                throw new UsuarioNaoEncontradoException();
+            }
+            return usuarios;
+        }
+        catch (UsuarioNaoEncontradoException)
         {
             throw new UsuarioNaoEncontradoException();
         }
-        return usuarios;
+        catch (UsuarioException mex)
+        {
+            throw new UsuarioException(mex.Message);
+        }
+        catch (Exception)
+        {
+            throw new Exception("Erro não mapeado ao buscar usuários");
+        }
     }
 
     public ReadUsuarioDTO BuscarUsuarioPorId(int id)
     {
-        ReadUsuarioDTO usuarioRecebido = _usuarioContext.BuscarUsuarioPorId(id);
+        try
+        {
+            ReadUsuarioDTO usuarioRecebido = _usuarioContext.BuscarUsuarioPorId(id);
 
-        if (usuarioRecebido is null)
+            if (usuarioRecebido is null)
+            {
+                throw new UsuarioNaoEncontradoException();
+            }
+
+            return usuarioRecebido;
+        }
+        catch (UsuarioNaoEncontradoException)
         {
             throw new UsuarioNaoEncontradoException();
         }
-
-        return usuarioRecebido;
-    }
-
-    public ReadUsuarioDTO BuscarUsuarioPorEmail(string email)
-    {
-        throw new NotImplementedException();
+        catch (UsuarioException mex)
+        {
+            throw new UsuarioException(mex.Message);
+        }
+        catch (Exception)
+        {
+            throw new Exception("Erro não mapeado ao buscar usuário");
+        }
     }
 
     public void DeletarUsuario(int id)
     {
         try
         {
+            ReadUsuarioDTO usuario = BuscarUsuarioPorId(id);
+
             _usuarioContext.DeletarUsuario(id);
+        }
+        catch (UsuarioException uex)
+        {
+            throw new UsuarioException(uex.Message);
         }
         catch (Exception)
         {
@@ -129,7 +160,7 @@ public class UsuarioService : IUsuarioService
         return true;
     }
 
-    public UpdateUsuarioDTO ValidarCamposUsuarioAtualizacao(UpdateUsuarioDTO usuarioAtualizado, ReadUsuarioDTO usuarioRecuperado)
+    private UpdateUsuarioDTO ValidarCamposUsuarioAtualizacao(UpdateUsuarioDTO usuarioAtualizado, ReadUsuarioDTO usuarioRecuperado)
     {
         if (usuarioAtualizado.Nome == null)
         {

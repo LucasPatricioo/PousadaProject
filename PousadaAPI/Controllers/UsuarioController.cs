@@ -60,9 +60,13 @@ public class UsuarioController : ControllerBase
         {
             return Ok(_usuarioService.BuscarUsuarios());
         }
-        catch(UsuarioNaoEncontradoException uex)
+        catch (UsuarioNaoEncontradoException)
         {
-            return NotFound(uex.Message);
+            return NoContent();
+        }
+        catch (UsuarioException uex)
+        {
+            return BadRequest(uex.Message);
         }
         catch (Exception ex)
         {
@@ -77,9 +81,13 @@ public class UsuarioController : ControllerBase
         {
             return Ok(_usuarioService.BuscarUsuarioPorId(id));
         }
-        catch (UsuarioNaoEncontradoException uex)
+        catch (UsuarioNaoEncontradoException)
         {
-            return NotFound(uex.Message);
+            return NoContent();
+        }
+        catch (UsuarioException uex)
+        {
+            return BadRequest(uex.Message);
         }
         catch (Exception ex)
         {
@@ -97,7 +105,7 @@ public class UsuarioController : ControllerBase
         }
         catch (UsuarioNaoEncontradoException uex)
         {
-            return NotFound(uex.Message);
+            return BadRequest(uex.Message);
         }
         catch (Exception ex)
         {
