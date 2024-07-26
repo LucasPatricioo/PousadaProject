@@ -15,9 +15,11 @@ string connectionString = builder.Configuration.GetConnectionString("DefaultConn
 
 builder.Services.AddScoped<IUsuarioDAO, UsuarioDAO>(provider => new UsuarioDAO(connectionString));
 builder.Services.AddScoped<IModuloDAO, ModuloDAO>(provider => new ModuloDAO(connectionString));
+builder.Services.AddScoped<IPermissaoDAO, PermissaoDAO>(provider => new PermissaoDAO(connectionString));
 
 builder.Services.AddScoped<IUsuarioService, UsuarioService>();
 builder.Services.AddScoped<IModuloService, ModuloService>();
+builder.Services.AddScoped<IPermissaoService, PermissaoService>();
 
 var app = builder.Build();
 

@@ -74,8 +74,8 @@ public class ModuloController : ControllerBase
         }
     }
 
-    [HttpGet("BuscarModuloPorId/{id}")]
-    public IActionResult BuscarModuloPorId(int id)
+    [HttpGet("BuscarModuloPorId")]
+    public IActionResult BuscarModuloPorId([FromQuery] int id)
     {
         try
         {
@@ -96,8 +96,8 @@ public class ModuloController : ControllerBase
         }
     }
 
-    [HttpDelete("DeletarModulo/{id}")]
-    public IActionResult DeletarModulo(int id)
+    [HttpDelete("DeletarModulo")]
+    public IActionResult DeletarModulo([FromQuery] int id)
     {
         try
         {
