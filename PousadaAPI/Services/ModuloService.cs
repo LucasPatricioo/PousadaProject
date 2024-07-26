@@ -36,9 +36,9 @@ namespace PousadaAPI.Services
         {
             try
             {
-                ReadModuloDTO readModuloDTO = BuscarModuloPorId(modulo.Id);
+                ReadModuloDTO moduloExitente = BuscarModuloPorId(modulo.Id);
 
-                modulo = ValidarCamposModuloAtualizacao(modulo, readModuloDTO);
+                modulo = ValidarCamposModuloAtualizacao(modulo, moduloExitente);
 
                 _moduloContext.AtualizarModulo(modulo);
             }

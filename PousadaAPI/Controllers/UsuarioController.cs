@@ -74,8 +74,8 @@ public class UsuarioController : ControllerBase
         }
     }
 
-    [HttpGet("BuscarUsuarioPorId/{id}")]
-    public IActionResult BuscarUsuarioPorId(int id)
+    [HttpGet("BuscarUsuarioPorId")]
+    public IActionResult BuscarUsuarioPorId([FromQuery] int id)
     {
         try
         {
@@ -95,8 +95,8 @@ public class UsuarioController : ControllerBase
         }
     }
 
-    [HttpDelete("DeletarUsuario/{id}")]
-    public IActionResult DeletarUsuario(int id)
+    [HttpDelete("DeletarUsuario")]
+    public IActionResult DeletarUsuario([FromQuery] int id)
     {
         try
         {
