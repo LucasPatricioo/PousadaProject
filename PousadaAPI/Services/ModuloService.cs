@@ -1,4 +1,5 @@
 ﻿using PousadaAPI.Data.DTO.Modulo;
+using PousadaAPI.Exceptions;
 using PousadaAPI.Interfaces;
 
 namespace PousadaAPI.Services
@@ -21,47 +22,145 @@ namespace PousadaAPI.Services
                     _moduloContext.InserirModulo(modulo);
                 }
             }
-            catch (Exception ex)
+            catch (ModuloException mex)
             {
-                throw new Exception(ex.Message);
+                throw new ModuloException(mex.Message);
+            }
+            catch (Exception)
+            {
+                throw new Exception("Erro não mapeado ao inserir módulo");
             }
         }
 
         public void AtualizarModulo(UpdateModuloDTO modulo)
         {
-            throw new System.NotImplementedException();
+            try
+            {
+                ReadModuloDTO readModuloDTO = BuscarModuloPorId(modulo.Id);
+
+                modulo = ValidarCamposModuloAtualizacao(modulo, readModuloDTO);
+
+                _moduloContext.AtualizarModulo(modulo);
+            }
+            catch (ModuloException mex)
+            {
+                throw new ModuloException(mex.Message);
+            }
+            catch (Exception)
+            {
+                throw new Exception("Erro não mapeado ao atualizar módulo");
+            }
         }
 
         public IEnumerable<ReadModuloDTO> BuscarModulos()
         {
-            throw new System.NotImplementedException();
+            try
+            {
+                var modulos = _moduloContext.BuscarModulos();
+                if (modulos is null || modulos.Count() == 0)
+                {
+                    throw new ModuloNaoEncontradoException();
+                }
+                return modulos;
+            }
+            catch (ModuloNaoEncontradoException)
+            {
+                throw new ModuloNaoEncontradoException();
+            }
+            catch (ModuloException mex)
+            {
+                throw new ModuloException(mex.Message);
+            }
+            catch (Exception)
+            {
+                throw new Exception("Erro não mapeado ao buscar módulos");
+            }
         }
 
         public ReadModuloDTO BuscarModuloPorId(int id)
         {
-            throw new System.NotImplementedException();
+            try
+            {
+                ReadModuloDTO modulo = _moduloContext.BuscarModuloPorId(id);
+
+                if (modulo is null)
+                {
+                    throw new ModuloNaoEncontradoException();
+                }
+
+                return modulo;
+            }
+            catch (ModuloNaoEncontradoException)
+            {
+                throw new ModuloNaoEncontradoException();
+            }
+            catch (ModuloException mex)
+            {
+                throw new ModuloException(mex.Message);
+            }
+            catch (Exception)
+            {
+                throw new Exception("Erro não mapeado ao buscar módulo");
+            }
         }
 
         public void DeletarModulo(int id)
         {
-            throw new System.NotImplementedException();
+            try
+            {
+                ReadModuloDTO modulo = BuscarModuloPorId(id);
+
+                _moduloContext.DeletarModulo(modulo.Id);
+            }
+            catch (ModuloException mex)
+            {
+                throw new ModuloException(mex.Message);
+            }
+            catch (Exception)
+            {
+                throw new Exception("Erro não mapeado ao deletar módulo");
+            }
         }
 
         #region Validações
 
         private bool ValidarModulo(CreateModuloDTO modulo)
         {
+            if (_moduloContext.BuscarModuloPorNome(modulo.Nome) != null)
+            {
+                throw new ModuloJaExisteException();
+            }
             if (string.IsNullOrWhiteSpace(modulo.Nome))
             {
-                throw new Exception("Nome do módulo não pode ser vazio");
+                throw new ModuloNomeInvalidoException();
             }
 
             if (string.IsNullOrWhiteSpace(modulo.Descricao))
             {
-                throw new Exception("Descrição do módulo não pode ser vazia");
+                throw new ModuloDescricaoInvalidaException();
             }
 
             return true;
+        }
+
+        private UpdateModuloDTO ValidarCamposModuloAtualizacao(UpdateModuloDTO moduloAtualizado, ReadModuloDTO moduloRecuperado)
+        {
+            if (string.IsNullOrEmpty(moduloAtualizado.Nome))
+            {
+                moduloAtualizado.Nome = moduloRecuperado.Nome;
+            }
+
+            if (string.IsNullOrEmpty(moduloAtualizado.Descricao))
+            {
+                moduloAtualizado.Descricao = moduloRecuperado.Descricao;
+            }
+
+            if (moduloAtualizado.Ativo == null)
+            {
+                moduloAtualizado.Ativo = moduloRecuperado.Ativo;
+            }
+
+            return moduloAtualizado;
         }
 
         #endregion

@@ -63,11 +63,6 @@ public class UsuarioDAO : IUsuarioDAO
         }
     }
 
-    public ReadUsuarioDTO BuscarUsuarioPorEmail(string email)
-    {
-        throw new NotImplementedException();
-    }
-
     public void DeletarUsuario(int id)
     {
         using (var connection = new MySqlConnection(_connectionString))

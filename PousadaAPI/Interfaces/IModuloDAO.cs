@@ -8,5 +8,6 @@ public interface IModuloDAO
     public void AtualizarModulo(UpdateModuloDTO modulo);
     public IEnumerable<ReadModuloDTO> BuscarModulos();
     public ReadModuloDTO BuscarModuloPorId(int id);
+    public ReadModuloDTO? BuscarModuloPorNome(string nome);
     public void DeletarModulo(int id);
 }

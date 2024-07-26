@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PousadaAPI.Data.DTO.Modulo;
+using PousadaAPI.Exceptions;
 using PousadaAPI.Interfaces;
 
 namespace PousadaAPI.Controllers;
@@ -23,37 +24,93 @@ public class ModuloController : ControllerBase
             _moduloService.InserirModulo(modulo);
             return Ok("Novo módulo criado com sucesso!");
         }
+        catch (ModuloException mex)
+        {
+            return BadRequest(mex.Message);
+        }
         catch (Exception ex)
         {
             return StatusCode(500, ex.Message);
         }
     }
 
-    [HttpPut]
+    [HttpPut("AtualizarModulo")]
     public IActionResult AtualizarModulo([FromBody] UpdateModuloDTO modulo)
     {
-        _moduloService.AtualizarModulo(modulo);
-        return Ok();
+        try
+        {
+            _moduloService.AtualizarModulo(modulo);
+            return Ok("Módulo atualizado com sucesso!");
+        }
+        catch (ModuloException mex)
+        {
+            return BadRequest(mex.Message);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ex.Message);
+        }
     }
 
-    [HttpGet]
+    [HttpGet("BuscarModulos")]
     public IActionResult BuscarModulos()
     {
-        var modulos = _moduloService.BuscarModulos();
-        return Ok(modulos);
+        try
+        {
+            var modulos = _moduloService.BuscarModulos();
+            return Ok(modulos);
+        }
+        catch (ModuloNaoEncontradoException)
+        {
+            return NoContent();
+        }
+        catch (ModuloException mex)
+        {
+            return BadRequest(mex.Message);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ex.Message);
+        }
     }
 
-    [HttpGet("{id}")]
+    [HttpGet("BuscarModuloPorId/{id}")]
     public IActionResult BuscarModuloPorId(int id)
     {
-        var modulo = _moduloService.BuscarModuloPorId(id);
-        return Ok(modulo);
+        try
+        {
+            var modulo = _moduloService.BuscarModuloPorId(id);
+            return Ok(modulo);
+        }
+        catch (ModuloNaoEncontradoException)
+        {
+            return NoContent();
+        }
+        catch (ModuloException mex)
+        {
+            return BadRequest(mex.Message);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ex.Message);
+        }
     }
 
-    [HttpDelete("{id}")]
+    [HttpDelete("DeletarModulo/{id}")]
     public IActionResult DeletarModulo(int id)
     {
-        _moduloService.DeletarModulo(id);
-        return Ok();
+        try
+        {
+            _moduloService.DeletarModulo(id);
+            return Ok("Módulo deletado com sucesso!");
+        }
+        catch (ModuloException mex)
+        {
+            return BadRequest(mex.Message);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ex.Message);
+        }
     }
 }

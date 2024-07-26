@@ -28,21 +28,63 @@ public class ModuloDAO : IModuloDAO
 
     public void AtualizarModulo(UpdateModuloDTO modulo)
     {
-        throw new System.NotImplementedException();
+        using (var connection = new MySqlConnection(_connectionString))
+        {
+            connection.Execute(
+                 @"UPDATE Modulo
+                  SET Nome = @Nome, Descricao = @Descricao, Ativo = @Ativo
+                  WHERE Id = @Id",
+                 modulo
+             );
+        }
     }
 
     public IEnumerable<ReadModuloDTO> BuscarModulos()
     {
-        throw new System.NotImplementedException();
+        using (var connection = new MySqlConnection(_connectionString))
+        {
+            return connection.Query<ReadModuloDTO>(
+                @"SELECT Id, Nome, Descricao, DataCriacao, Ativo
+                  FROM Modulo"
+            );
+        }
     }
 
     public ReadModuloDTO BuscarModuloPorId(int id)
     {
-        throw new System.NotImplementedException();
+        using (var connection = new MySqlConnection(_connectionString))
+        {
+            return connection.QueryFirstOrDefault<ReadModuloDTO>(
+                @"SELECT Id, Nome, Descricao, DataCriacao, Ativo 
+                  FROM Modulo
+                  WHERE Id = @Id",
+                new { Id = id }
+            );
+        }
+    }
+
+    public ReadModuloDTO? BuscarModuloPorNome(string nome)
+    {
+        using (var connection = new MySqlConnection(_connectionString))
+        {
+            return connection.QueryFirstOrDefault<ReadModuloDTO>(
+                @"SELECT Id, Nome, Descricao
+                  FROM Modulo
+                  WHERE Nome = @Nome",
+                new { Nome = nome }
+            );
+        }
     }
 
     public void DeletarModulo(int id)
     {
-        throw new System.NotImplementedException();
+        using (var connection = new MySqlConnection(_connectionString))
+        {
+            connection.Execute(
+                @"DELETE FROM Modulo
+                  WHERE Id = @Id",
+                new { Id = id }
+            );
+        }
     }
 }
