@@ -39,13 +39,28 @@ public class ModuloDAO : IModuloDAO
         }
     }
 
+    public void AtualizarPermissoesModulo(UpdatePermissaoModuloDTO permissoes)
+    {
+        using (var connection = new MySqlConnection(_connectionString))
+        {
+            connection.Execute(
+                @"UPDATE PERMISSAO_MODULO
+                  SET Leitura = @Leitura, Escrita = @Escrita, Edicao = @Edicao, Exclusao = @Exclusao
+                  WHERE Id_Modulo = @IdModulo AND Id_Permissao = @IdPermissao",
+                permissoes
+            );
+        }
+    }
+
     public IEnumerable<ReadModuloDTO> BuscarModulos()
     {
         using (var connection = new MySqlConnection(_connectionString))
         {
             return connection.Query<ReadModuloDTO>(
-                @"SELECT Id, Nome, Descricao, DataCriacao, Ativo
-                  FROM Modulo"
+                @"SELECT M.Id, M.Nome, M.Descricao, M.DataCriacao, M.Ativo,
+                    PM.Leitura, PM.Escrita, PM.Edicao, PM.Exclusao 
+                  FROM Modulo M
+                    INNER JOIN PERMISSAO_MODULO PM ON M.Id = PM.Id_Modulo"
             );
         }
     }
@@ -55,9 +70,11 @@ public class ModuloDAO : IModuloDAO
         using (var connection = new MySqlConnection(_connectionString))
         {
             return connection.QueryFirstOrDefault<ReadModuloDTO>(
-                @"SELECT Id, Nome, Descricao, DataCriacao, Ativo 
-                  FROM Modulo
-                  WHERE Id = @Id",
+                @"SELECT M.Id, M.Nome, M.Descricao, M.DataCriacao, M.Ativo, 
+                    PM.Leitura, PM.Escrita, PM.Edicao, PM.Exclusao 
+                  FROM Modulo M 
+                    INNER JOIN PERMISSAO_MODULO PM ON M.Id = PM.Id_Modulo
+                  WHERE M.Id = @Id",
                 new { Id = id }
             );
         }
@@ -68,9 +85,11 @@ public class ModuloDAO : IModuloDAO
         using (var connection = new MySqlConnection(_connectionString))
         {
             return connection.QueryFirstOrDefault<ReadModuloDTO>(
-                @"SELECT Id, Nome, Descricao, DataCriacao, Ativo 
-                  FROM Modulo
-                  WHERE Nome = @Nome",
+                @"SELECT M.Id, M.Nome, M.Descricao, M.DataCriacao, M.Ativo
+                    PM.Leitura, PM.Escrita, PM.Edicao, PM.Exclusao
+                  FROM Modulo M
+                    INNER JOIN PERMISSAO_MODULO PM ON M.Id = PM.Id_Modulo
+                  WHERE M.Nome = @Nome",
                 new { Nome = nome }
             );
         }

@@ -52,6 +52,22 @@ namespace PousadaAPI.Services
             }
         }
 
+        public void AssociarPermissaoUsuario(UpdatePermissaoUsuarioDTO permissaoUsuario)
+        {
+            try
+            {
+                _permissaoContext.AssociarPermissaoUsuario(permissaoUsuario);
+            }
+            catch (PermissaoException pex)
+            {
+                throw new PermissaoException(pex.Message);
+            }
+            catch (Exception)
+            {
+                throw new Exception("Erro não mapeado ao associar permissão a usuário");
+            }
+        }
+
         public IEnumerable<ReadPermissaoDTO> BuscarPermissoes()
         {
             try
@@ -74,6 +90,31 @@ namespace PousadaAPI.Services
             catch (Exception)
             {
                 throw new Exception("Erro não mapeado ao buscar permissões");
+            }
+        }
+
+        public IEnumerable<ReadPermissaoDTO> BuscarPermissoesPorIdUsuario(int idUsuario)
+        {
+            try
+            {
+                var permissoes = _permissaoContext.BuscarPermissoesPorIdUsuario(idUsuario);
+                if (permissoes is null || permissoes.Count() == 0)
+                {
+                    throw new PermissaoNaoEncontradaException();
+                }
+                return permissoes;
+            }
+            catch (PermissaoNaoEncontradaException)
+            {
+                throw new PermissaoNaoEncontradaException();
+            }
+            catch (PermissaoException pex)
+            {
+                throw new PermissaoException(pex.Message);
+            }
+            catch (Exception)
+            {
+                throw new Exception("Erro não mapeado ao buscar permissões por id de usuário");
             }
         }
 
@@ -120,6 +161,22 @@ namespace PousadaAPI.Services
             catch (Exception)
             {
                 throw new Exception("Erro não mapeado ao deletar permissão");
+            }
+        }
+
+        public void DesassociarPermissaoUsuario(UpdatePermissaoUsuarioDTO permissaoUsuario)
+        {
+            try
+            {
+                _permissaoContext.DesassociarPermissaoUsuario(permissaoUsuario);
+            }
+            catch (PermissaoException pex)
+            {
+                throw new PermissaoException(pex.Message);
+            }
+            catch (Exception)
+            {
+                throw new Exception("Erro não mapeado ao desassociar permissão de usuário");
             }
         }
 

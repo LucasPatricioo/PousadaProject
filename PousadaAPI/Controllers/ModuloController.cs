@@ -52,6 +52,24 @@ public class ModuloController : ControllerBase
         }
     }
 
+    [HttpPut("AtualizarPermissoesModulo")]
+    public IActionResult AtualizarPermissoesModulo([FromBody] UpdatePermissaoModuloDTO permissoes)
+    {
+        try
+        {
+            _moduloService.AtualizarPermissoesModulo(permissoes);
+            return Ok("Permissões do módulo atualizadas com sucesso!");
+        }
+        catch (ModuloException mex)
+        {
+            return BadRequest(mex.Message);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ex.Message);
+        }
+    }
+
     [HttpGet("BuscarModulos")]
     public IActionResult BuscarModulos()
     {

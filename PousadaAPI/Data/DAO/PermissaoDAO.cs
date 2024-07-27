@@ -39,6 +39,18 @@ namespace PousadaAPI.Data.DAO
             }
         }
 
+        public void AssociarPermissaoUsuario(UpdatePermissaoUsuarioDTO permissaoUsuario)
+        {
+            using (var connection = new MySqlConnection(_connectionString))
+            {
+                connection.Execute(
+                    @"INSERT INTO Permissao_Usuario (Id_Usuario, Id_Permissao)
+                      VALUES (@IdUsuario, @IdPermissao)",
+                    permissaoUsuario
+                );
+            }
+        }
+
         public IEnumerable<ReadPermissaoDTO> BuscarPermissoes()
         {
             using (var connection = new MySqlConnection(_connectionString))
@@ -46,6 +58,20 @@ namespace PousadaAPI.Data.DAO
                 return connection.Query<ReadPermissaoDTO>(
                     @"SELECT Id, Nome, Descricao, DataCriacao, Ativo
                       FROM Permissao"
+                );
+            }
+        }
+
+        public IEnumerable<ReadPermissaoDTO> BuscarPermissoesPorIdUsuario(int idUsuario)
+        {
+            using (var connection = new MySqlConnection(_connectionString))
+            {
+                return connection.Query<ReadPermissaoDTO>(
+                    @"SELECT P.Id, P.Nome, P.Descricao, P.DataCriacao, P.Ativo
+                      FROM Permissao P
+                      JOIN Permissao_Usuario PU ON P.Id = PU.Id_Permissao
+                      WHERE PU.Id_Usuario = @IdUsuario",
+                    new { IdUsuario = idUsuario }
                 );
             }
         }
@@ -85,6 +111,17 @@ namespace PousadaAPI.Data.DAO
                       WHERE Id = @Id",
                     new { Id = id }
                 );
+            }
+        }
+
+        public void DesassociarPermissaoUsuario(UpdatePermissaoUsuarioDTO permissaoUsuario)
+        {
+            using (var connection = new MySqlConnection(_connectionString))
+            {
+                connection.Execute(
+                    @"DELETE FROM Permissao_Usuario
+                      WHERE Id_Usuario = @IdUsuario AND Id_Permissao = @IdPermissao",
+                    permissaoUsuario);
             }
         }
     }

@@ -34,6 +34,24 @@ namespace PousadaAPI.Controllers
             }
         }
 
+        [HttpPost("AssociarPermissaoUsuario")]
+        public IActionResult AssociarPermissaoUsuario([FromBody] UpdatePermissaoUsuarioDTO permissaoUsuario)
+        {
+            try
+            {
+                _permissaoService.AssociarPermissaoUsuario(permissaoUsuario);
+                return Ok("Permissão associada ao usuário com sucesso!");
+            }
+            catch (PermissaoException pex)
+            {
+                return BadRequest(pex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+
         [HttpPut("AtualizarPermissao")]
         public IActionResult AtualizarPermissao([FromBody] UpdatePermissaoDTO permissao)
         {
@@ -58,6 +76,28 @@ namespace PousadaAPI.Controllers
             try
             {
                 var permissoes = _permissaoService.BuscarPermissoes();
+                return Ok(permissoes);
+            }
+            catch (PermissaoNaoEncontradaException)
+            {
+                return NoContent();
+            }
+            catch (PermissaoException pex)
+            {
+                return BadRequest(pex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+
+        [HttpGet("BuscarPermissoesPorIdUsuario")]
+        public IActionResult BuscarPermissoesPorIdUsuario([FromQuery] int idUsuario)
+        {
+            try
+            {
+                var permissoes = _permissaoService.BuscarPermissoesPorIdUsuario(idUsuario);
                 return Ok(permissoes);
             }
             catch (PermissaoNaoEncontradaException)
@@ -103,6 +143,24 @@ namespace PousadaAPI.Controllers
             {
                 _permissaoService.DeletarPermissao(id);
                 return Ok("Permissão deletada com sucesso!");
+            }
+            catch (PermissaoException pex)
+            {
+                return BadRequest(pex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+
+        [HttpDelete("DesassociarPermissaoUsuario")]
+        public IActionResult DesassociarPermissaoUsuario([FromBody] UpdatePermissaoUsuarioDTO permissaoUsuario)
+        {
+            try
+            {
+                _permissaoService.DesassociarPermissaoUsuario(permissaoUsuario);
+                return Ok("Permissão desassociada do usuário com sucesso!");
             }
             catch (PermissaoException pex)
             {
