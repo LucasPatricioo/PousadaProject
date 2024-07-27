@@ -39,6 +39,18 @@ namespace PousadaAPI.Data.DAO
             }
         }
 
+        public void AssociarPermissaoUsuario(UpdatePermissaoUsuarioDTO permissaoUsuario)
+        {
+            using (var connection = new MySqlConnection(_connectionString))
+            {
+                connection.Execute(
+                    @"INSERT INTO Permissao_Usuario (Id_Usuario, Id_Permissao)
+                      VALUES (@IdUsuario, @IdPermissao)",
+                    permissaoUsuario
+                );
+            }
+        }
+
         public IEnumerable<ReadPermissaoDTO> BuscarPermissoes()
         {
             using (var connection = new MySqlConnection(_connectionString))
@@ -99,6 +111,17 @@ namespace PousadaAPI.Data.DAO
                       WHERE Id = @Id",
                     new { Id = id }
                 );
+            }
+        }
+
+        public void DesassociarPermissaoUsuario(UpdatePermissaoUsuarioDTO permissaoUsuario)
+        {
+            using (var connection = new MySqlConnection(_connectionString))
+            {
+                connection.Execute(
+                    @"DELETE FROM Permissao_Usuario
+                      WHERE Id_Usuario = @IdUsuario AND Id_Permissao = @IdPermissao",
+                    permissaoUsuario);
             }
         }
     }

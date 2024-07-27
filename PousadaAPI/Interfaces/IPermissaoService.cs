@@ -1,4 +1,5 @@
-﻿using PousadaAPI.Data.DTO.Permissoes;
+﻿using Microsoft.AspNetCore.Mvc;
+using PousadaAPI.Data.DTO.Permissoes;
 
 namespace PousadaAPI.Interfaces
 {
@@ -6,9 +7,11 @@ namespace PousadaAPI.Interfaces
     {
         public void InserirPermissao(CreatePermissaoDTO permissao);
         public void AtualizarPermissao(UpdatePermissaoDTO permissao);
+        public void AssociarPermissaoUsuario(UpdatePermissaoUsuarioDTO permissaoUsuario);
         public IEnumerable<ReadPermissaoDTO> BuscarPermissoes();
-        IEnumerable<ReadPermissaoDTO> BuscarPermissoesPorIdUsuario(int idUsuario);
+        public IEnumerable<ReadPermissaoDTO> BuscarPermissoesPorIdUsuario(int idUsuario);
         public ReadPermissaoDTO BuscarPermissaoPorId(int id);
         public void DeletarPermissao(int id);
+        public void DesassociarPermissaoUsuario(UpdatePermissaoUsuarioDTO permissaoUsuario);
     }
 }
