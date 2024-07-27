@@ -74,6 +74,28 @@ namespace PousadaAPI.Controllers
             }
         }
 
+        [HttpGet("BuscarPermissoesPorIdUsuario")]
+        public IActionResult BuscarPermissoesPorIdUsuario([FromQuery] int idUsuario)
+        {
+            try
+            {
+                var permissoes = _permissaoService.BuscarPermissoesPorIdUsuario(idUsuario);
+                return Ok(permissoes);
+            }
+            catch (PermissaoNaoEncontradaException)
+            {
+                return NoContent();
+            }
+            catch (PermissaoException pex)
+            {
+                return BadRequest(pex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+
         [HttpGet("BuscarPermissaoPorId")]
         public IActionResult BuscarPermissaoPorId([FromQuery] int id)
         {

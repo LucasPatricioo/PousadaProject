@@ -50,6 +50,20 @@ namespace PousadaAPI.Data.DAO
             }
         }
 
+        public IEnumerable<ReadPermissaoDTO> BuscarPermissoesPorIdUsuario(int idUsuario)
+        {
+            using (var connection = new MySqlConnection(_connectionString))
+            {
+                return connection.Query<ReadPermissaoDTO>(
+                    @"SELECT P.Id, P.Nome, P.Descricao, P.DataCriacao, P.Ativo
+                      FROM Permissao P
+                      JOIN Permissao_Usuario PU ON P.Id = PU.Id_Permissao
+                      WHERE PU.Id_Usuario = @IdUsuario",
+                    new { IdUsuario = idUsuario }
+                );
+            }
+        }
+
         public ReadPermissaoDTO BuscarPermissaoPorId(int id)
         {
             using (var connection = new MySqlConnection(_connectionString))

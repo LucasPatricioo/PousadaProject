@@ -77,6 +77,31 @@ namespace PousadaAPI.Services
             }
         }
 
+        public IEnumerable<ReadPermissaoDTO> BuscarPermissoesPorIdUsuario(int idUsuario)
+        {
+            try
+            {
+                var permissoes = _permissaoContext.BuscarPermissoesPorIdUsuario(idUsuario);
+                if (permissoes is null || permissoes.Count() == 0)
+                {
+                    throw new PermissaoNaoEncontradaException();
+                }
+                return permissoes;
+            }
+            catch (PermissaoNaoEncontradaException)
+            {
+                throw new PermissaoNaoEncontradaException();
+            }
+            catch (PermissaoException pex)
+            {
+                throw new PermissaoException(pex.Message);
+            }
+            catch (Exception)
+            {
+                throw new Exception("Erro não mapeado ao buscar permissões por id de usuário");
+            }
+        }
+
         public ReadPermissaoDTO BuscarPermissaoPorId(int id)
         {
             try
