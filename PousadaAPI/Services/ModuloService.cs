@@ -52,6 +52,22 @@ namespace PousadaAPI.Services
             }
         }
 
+        public void AtualizarPermissoesModulo(UpdatePermissaoModuloDTO permissoes)
+        {
+            try
+            {
+                _moduloContext.AtualizarPermissoesModulo(permissoes);
+            }
+            catch (ModuloException mex)
+            {
+                throw new ModuloException(mex.Message);
+            }
+            catch (Exception)
+            {
+                throw new Exception("Erro não mapeado ao atualizar permissões do módulo");
+            }
+        }
+
         public IEnumerable<ReadModuloDTO> BuscarModulos()
         {
             try
