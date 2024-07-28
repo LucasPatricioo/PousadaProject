@@ -47,3 +47,19 @@ packages/
 # Outros arquivos e diretórios a serem ignorados
 .DS_Store
 Thumbs.db
+
+# Arquivos de configuração do Angular
+angular.json
+tsconfig.json
+tsconfig.app.json
+tsconfig.spec.json
+tslint.json
+karma.conf.js
+protractor.conf.js
+
+# Arquivos gerados pelo Angular
+/dist/
+/node_modules/
+
+# Arquivos de dependências do Angular
+package-lock.json
