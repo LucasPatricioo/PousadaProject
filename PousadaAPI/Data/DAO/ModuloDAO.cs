@@ -85,7 +85,7 @@ public class ModuloDAO : IModuloDAO
         using (var connection = new MySqlConnection(_connectionString))
         {
             return connection.QueryFirstOrDefault<ReadModuloDTO>(
-                @"SELECT M.Id, M.Nome, M.Descricao, M.DataCriacao, M.Ativo
+                @"SELECT M.Id, M.Nome, M.Descricao, M.DataCriacao, M.Ativo,
                     PM.Leitura, PM.Escrita, PM.Edicao, PM.Exclusao
                   FROM Modulo M
                     INNER JOIN PERMISSAO_MODULO PM ON M.Id = PM.Id_Modulo
